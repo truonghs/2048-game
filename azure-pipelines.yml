@@ -12,6 +12,7 @@ steps:
     scriptType: 'bash'
     scriptLocation: 'inlineScript'
     inlineScript: |
+      az acr repository delete --name demoarc123 --image web-game:tag --yes
       docker build -t demoarc123.azurecr.io/web-game:tag 2048-game
       az acr login -n demoarc123
       docker push demoarc123.azurecr.io/web-game:tag
