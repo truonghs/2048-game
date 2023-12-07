@@ -31,5 +31,5 @@ steps:
     secretType: 'dockerRegistry'
     containerRegistryType: 'Azure Container Registry'
     azureSubscriptionEndpointForSecrets: 'Towards-AzurePortal'
-    azureContainerRegistry: 'demoarc111.azurecr.io'
+    azureContainerRegistry: 'demoarc123.azurecr.io'
     forceUpdate: false
