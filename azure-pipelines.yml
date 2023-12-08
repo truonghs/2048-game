@@ -1,3 +1,5 @@
+
+
 trigger:
 - main
 
@@ -6,8 +8,6 @@ pool:
 
 variables:
   versionnumber: $[counter(variables['Build.SourceBranchName'], 1)]
-  deploymentExists:
-  deploymentName: "web-game"
 
 steps:
 - task: AzureCLI@2
@@ -32,19 +32,19 @@ steps:
     scriptLocation: 'inlineScript'
     inlineScript: |
       # Kiểm tra xem Deployment có tồn tại hay không
-      
-      az aks get-credentials --resource-group DemoGroup --name demokubernete
-      deploymentExists=$(kubectl get deployment/web-game -o name --ignore-not-found)
-      if [ "$deploymentExists" == "\"$(deploymentName)\"" ]; then
-        echo "##vso[task.setvariable variable=deploymentExists]true"
-      else
-        echo "##vso[task.setvariable variable=deploymentExists]false"
-      fi
+      deployment_name="web-game"
+      namespace="default"
 
+      deployment_exists=$(az aks browse --resource-group <ResourceGroupName> --name <AKSClusterName> --admin)
+      if [[ $deployment_exists == *"kubectl get deployment/$deployment_name"* ]]; then
+        echo "##vso[task.setvariable variable=deployment_exists]true"
+      else
+        echo "##vso[task.setvariable variable=deployment_exists]false"
+      fi
   displayName: 'Check Deployment Existence'
 
 - task: Kubernetes@1
-  condition: eq(variables['deploymentExists'], 'true')
+  condition: eq(variables['deployment_exists'], 'true')
   inputs:
     connectionType: 'Azure Resource Manager'
     azureSubscriptionEndpoint: 'Towards-AzurePortal'
@@ -61,7 +61,7 @@ steps:
     forceUpdate: false
 
 - task: Kubernetes@1
-  condition: eq(variables['deploymentExists'], 'false')
+  condition: eq(variables['deployment_exists'], 'false')
   inputs:
     connectionType: 'Azure Resource Manager'
     azureSubscriptionEndpoint: 'Towards-AzurePortal'
