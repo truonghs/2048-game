@@ -14,14 +14,18 @@ steps:
     scriptType: 'bash'
     scriptLocation: 'inlineScript'
     inlineScript: |
-      az acr repository delete --name demoarc123 --image web-game:$(versionnumber) --yes
       docker build -t demoarc123.azurecr.io/web-game:$(versionnumber) 2048-game
       az acr login -n demoarc123
       docker push demoarc123.azurecr.io/web-game:$(versionnumber)
 
 - powershell: |
+    Write-Host "Version Number: $(versionnumber)"
+  displayName: 'Print Version Number'
+
+- powershell: |
     (Get-Content "$(System.DefaultWorkingDirectory)/01_kubernetes_aks/app-deploy.yaml") -replace 'VERSIONNUMBER', '$(versionnumber)' | Set-Content "$(System.DefaultWorkingDirectory)/01_kubernetes_aks/app-deploy.yaml"
   displayName: 'Replace Version Number'
+
 - task: Kubernetes@1
   inputs:
     connectionType: 'Azure Resource Manager'
@@ -38,7 +42,4 @@ steps:
     azureContainerRegistry: 'demoarc123.azurecr.io'
     forceUpdate: false
 
-- powershell: |
-    Write-Host "Version Number: $(versionnumber)"
-  displayName: 'Print Version Number'
 
