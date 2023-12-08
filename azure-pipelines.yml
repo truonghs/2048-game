@@ -24,9 +24,17 @@ steps:
     azureResourceGroup: 'DemoGroup'
     kubernetesCluster: 'demokubernete'
     namespace: 'default'
+    command: 'delete'
+    arguments: 'service,deployment web-game'
+- task: Kubernetes@1
+  inputs:
+    connectionType: 'Azure Resource Manager'
+    azureSubscriptionEndpoint: 'Towards-AzurePortal'
+    azureResourceGroup: 'DemoGroup'
+    kubernetesCluster: 'demokubernete'
+    namespace: 'default'
     command: 'apply'
     inline: |
-      kubectl delete service web-game
       apiVersion: apps/v1
       kind: Deployment
       metadata:
