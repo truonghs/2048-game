@@ -26,6 +26,7 @@ steps:
     namespace: 'default'
     command: 'apply'
     inline: |
+      kubectl delete ingress web-game
       apiVersion: apps/v1
       kind: Deployment
       metadata:
