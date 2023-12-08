@@ -26,55 +26,24 @@ steps:
 - script: echo $(versionnumber)
   displayName: 'Print Version Number'
 
+- powershell: |
+    (Get-Content -Path kubernetes-config-template.yaml) -replace '\$\(versionnumber\)', '$(versionnumber)' | Set-Content -Path kubernetes-config.yaml
+  displayName: 'Replace Version Number in YAML'
+
 - task: Kubernetes@1
   inputs:
     connectionType: 'Azure Resource Manager'
     azureSubscriptionEndpoint: 'Towards-AzurePortal'
-    azureResourceGroup: 'DemoGroup'
+    azureResourceGroup: 'demogroup'
     kubernetesCluster: 'demokubernete'
     namespace: 'default'
     command: 'apply'
-    configurationType: 'inline'
-    inline: |
-      apiVersion: apps/v1
-      kind: Deployment
-      metadata:
-        name: web-game
-      spec:
-        replicas: 1
-        selector:
-          matchLabels:
-            app: web-game
-        template:
-          metadata:
-            labels:
-              app: web-game
-          spec:
-            containers:
-              - name: web-game
-                image: demoarc123.azurecr.io/web-game:$(versionnumber)
-                ports:
-                  - containerPort: 80
-                resources:
-                  requests:
-                    cpu: 250m
-                  limits:
-                    cpu: 500m
-                imagePullPolicy: Always
-      ---
-      apiVersion: v1
-      kind: Service
-      metadata:
-          name: web-game
-      spec:
-          type: LoadBalancer
-          ports:
-              - port: 80
-          selector:
-              app: web-game
+    useConfigurationFile: true
+    configuration: '$(Build.SourcesDirectory)/kubernetes-config.yaml'
     secretType: 'dockerRegistry'
     containerRegistryType: 'Azure Container Registry'
     azureSubscriptionEndpointForSecrets: 'Towards-AzurePortal'
     azureContainerRegistry: 'demoarc123.azurecr.io'
     forceUpdate: false
+    
     
