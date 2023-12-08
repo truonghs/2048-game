@@ -87,3 +87,5 @@ steps:
     azureSubscriptionEndpointForSecrets: 'Towards-AzurePortal'
     azureContainerRegistry: 'demoarc123.azurecr.io'
     forceUpdate: true
+    arguments: '-f -'
+
