@@ -47,7 +47,7 @@ steps:
     kubernetesCluster: 'demokubernete'
     namespace: 'default'
     command: 'set'
-    arguments: 'image deployment/web-game *=demoarc123.azurecr.io/web-game:$(versionnumber)'
+    arguments: image deployment/web-game *=demoarc123.azurecr.io/web-game:$(versionnumber)
     secretType: 'dockerRegistry'
     containerRegistryType: 'Azure Container Registry'
     azureSubscriptionEndpointForSecrets: 'Towards-AzurePortal'
