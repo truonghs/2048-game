@@ -20,7 +20,7 @@ steps:
       docker push demoarc123.azurecr.io/web-game:$(versionnumber)
 
 - powershell: |
-    (Get-Content "$(System.DefaultWorkingDirectory)/01_kubernetes_aks/app-deploy.yaml") -replace 'REPLACE_VERSIONNUMBER', '$(versionnumber)' | Set-Content "$(System.DefaultWorkingDirectory)/01_kubernetes_aks/app-deploy.yaml"
+    (Get-Content "$(System.DefaultWorkingDirectory)/01_kubernetes_aks/app-deploy.yaml") -replace 'VERSIONNUMBER', '$(versionnumber)' | Set-Content "$(System.DefaultWorkingDirectory)/01_kubernetes_aks/app-deploy.yaml"
   displayName: 'Replace Version Number'
 - task: Kubernetes@1
   inputs:
