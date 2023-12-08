@@ -19,10 +19,6 @@ steps:
       az acr login -n demoarc123
       docker push demoarc123.azurecr.io/web-game:$(versionnumber)
 
-- powershell: |
-    Write-Host "##vso[task.setvariable variable=versionnumber]$($env:versionnumber)"
-  displayName: 'Set Version Number'
-
 - task: Kubernetes@1
   inputs:
     connectionType: 'Azure Resource Manager'
@@ -42,7 +38,7 @@ steps:
 - powershell: |
     Write-Host "Version Number: $env:versionnumber"
   displayName: 'Print Version Number'
-  
+
 - task: Kubernetes@1
   inputs:
     connectionType: 'Azure Resource Manager'
@@ -51,7 +47,7 @@ steps:
     kubernetesCluster: 'demokubernete'
     namespace: 'default'
     command: 'set'
-    arguments: 'image deployment/web-game --set=image=demoarc123.azurecr.io/web-game:"$(versionnumber)"'
+    arguments: 'image deployment/web-game *=demoarc123.azurecr.io/web-game:$(versionnumber)'
     secretType: 'dockerRegistry'
     containerRegistryType: 'Azure Container Registry'
     azureSubscriptionEndpointForSecrets: 'Towards-AzurePortal'
