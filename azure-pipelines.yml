@@ -15,9 +15,7 @@ steps:
       echo "##vso[task.prependpath]$(Build.SourcesDirectory)/path/to/cache/key"
       echo "##vso[task.prependpath]$(Build.SourcesDirectory)/path/to/another/cache/key"
       az acr repository delete --name demoarc123 --image web-game:tag --yes
-      docker build -t demoarc123.azurecr.io/web-game:tag 2048-game
-      az acr login -n demoarc123
-      docker push demoarc123.azurecr.io/web-game:tag
+      
 
 - script: cat 01_kubernetes_aks/app-deploy.yaml
 
