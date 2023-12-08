@@ -35,4 +35,4 @@ steps:
     containerRegistryType: 'Azure Container Registry'
     azureSubscriptionEndpointForSecrets: 'Towards-AzurePortal'
     azureContainerRegistry: 'demoarc123.azurecr.io'
-    forceUpdate: false
+    forceUpdate: true
