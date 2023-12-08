@@ -35,7 +35,7 @@ steps:
       deployment_name="web-game"
       namespace="default"
 
-      deployment_exists=$(az aks browse --resource-group DemoGroup --name demokubernete --admin)
+      deployment_exists=$(az aks browse --resource-group DemoGroup --name demokubernete)
       if [[ $deployment_exists == *"kubectl get deployment/$deployment_name"* ]]; then
         echo "##vso[task.setvariable variable=deployment_exists]true"
       else
