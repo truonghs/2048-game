@@ -29,9 +29,9 @@ steps:
     Write-Host "Nội Dung Đã Chỉnh Sửa:"
     Write-Host $noiDung
     # Lưu nội dung vào một biến để sử dụng cho tác vụ Kubernetes
-    $noiDung | Out-File "$(System.DefaultWorkingDirectory)/01_kubernetes_aks/app-deploy-configured.yaml"
+    $noiDung | Out-File "$(System.DefaultWorkingDirectory)/01_kubernetes_aks/app-deploy.yaml"
   displayName: 'Truy Cập và Lưu File Đã Chỉnh Sửa'
-  
+
 - task: Kubernetes@1
   inputs:
     connectionType: 'Azure Resource Manager'
