@@ -1,11 +1,11 @@
 trigger:
 - main
 
-variables:
-  originalBranchName: 'main'
-
 pool:
   vmImage: ubuntu-latest
+
+variables:
+  versionnumber: $[counter(variables['Build.SourceBranchName'], 1)]
 
 steps:
 - task: AzureCLI@2
@@ -19,13 +19,9 @@ steps:
       az acr login -n demoarc123
       docker push demoarc123.azurecr.io/web-game:latest
 
-- task: PowerShell@2
-  inputs:
-    targetType: 'inline'
-    script: |
-      $newVersion = [int]$env:originalBranchName.Replace('-', '_') + 1
-      Write-Host "##vso[task.setvariable variable=versionnumber]$newVersion"
-    displayName: 'Set New Version Number'
+- powershell: |
+    Write-Host "##vso[task.setvariable variable=versionnumber]$($env:versionnumber)"
+  displayName: 'Set Version Number'
 
 - script: echo $(versionnumber)
   displayName: 'Print Version Number'
@@ -76,7 +72,6 @@ steps:
       kind: Service
       metadata:
           name: web-game
-
       spec:
           type: LoadBalancer
           ports:
