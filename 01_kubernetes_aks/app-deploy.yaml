@@ -21,7 +21,7 @@ spec:
         "kubernetes.io/os": linux
       containers:
       - name: web-game
-        image: mylabacr13.azurecr.io/web-game:76
+        image: mylabacr123.azurecr.io/web-game:76
         ports:
         - containerPort: 80
         resources:
