@@ -44,7 +44,7 @@ steps:
 
 - task: AzureCLI@2
   inputs:
-    azureSubscription: 'YourAzureSubscription'
+    azureSubscription: 'Towards-AzurePortal'
     scriptType: 'bash'
     scriptLocation: 'inlineScript'
     inlineScript: |
