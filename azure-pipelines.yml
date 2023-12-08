@@ -19,6 +19,10 @@ steps:
       az acr login -n demoarc123
       docker push demoarc123.azurecr.io/web-game:$(versionnumber)
 
+- powershell: |
+    (Get-Content "$(System.DefaultWorkingDirectory)\path\to\01_kubernetes_aks.yml") -replace 'VERSIONNUMBER', '$(versionnumber)' | Set-Content "$(System.DefaultWorkingDirectory)\path\to\01_kubernetes_aks.yml"
+  displayName: 'Replace Version Number'
+
 - task: Kubernetes@1
   inputs:
     connectionType: 'Azure Resource Manager'
