@@ -14,10 +14,10 @@ steps:
     scriptType: 'bash'
     scriptLocation: 'inlineScript'
     inlineScript: |
-      az acr repository delete --name demoarc123 --image web-game:latest --yes
-      docker build -t demoarc123.azurecr.io/web-game:latest 2048-game
+      az acr repository delete --name demoarc123 --image web-game:$(versionnumber) --yes
+      docker build -t demoarc123.azurecr.io/web-game:$(versionnumber) 2048-game
       az acr login -n demoarc123
-      docker push demoarc123.azurecr.io/web-game:latest
+      docker push demoarc123.azurecr.io/web-game:$(versionnumber)
 
 - powershell: |
     Write-Host "##vso[task.setvariable variable=versionnumber]$($env:versionnumber)"
@@ -58,7 +58,7 @@ steps:
                       "kubernetes.io/os": linux
                   containers:
                       - name: web-game
-                        image: demoarc123.azurecr.io/web-game:latest
+                        image: demoarc123.azurecr.io/web-game:$(versionnumber)
                         ports:
                             - containerPort: 80
                         resources:
