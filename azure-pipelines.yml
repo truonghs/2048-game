@@ -7,6 +7,7 @@ pool:
 variables:
   versionnumber: $[counter(variables['Build.SourceBranchName'], 1)]
   deploymentExists:
+  deploymentName="web-game"
 
 steps:
 - task: AzureCLI@2
@@ -31,6 +32,7 @@ steps:
     scriptLocation: 'inlineScript'
     inlineScript: |
       # Kiểm tra xem Deployment có tồn tại hay không
+      
       az aks get-credentials --resource-group DemoGroup --name demokubernete
       deploymentExists=$(kubectl get deployment/web-game -o name --ignore-not-found)
       if [ "$deploymentExists" == "\"$(deploymentName)\"" ]; then
