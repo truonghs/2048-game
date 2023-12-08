@@ -26,10 +26,6 @@ steps:
 - script: echo $(versionnumber)
   displayName: 'Print Version Number'
 
-- powershell: |
-    (Get-Content -Path 01_kubernetes_aks/app-deploy.yaml) -replace '\$\(versionnumber\)', '$(versionnumber)' | Set-Content -Path kubernetes-config.yaml
-  displayName: 'Replace Version Number in YAML'
-
 - task: Kubernetes@1
   inputs:
     connectionType: 'Azure Resource Manager'
@@ -39,11 +35,53 @@ steps:
     namespace: 'default'
     command: 'apply'
     useConfigurationFile: true
-    configuration: '$(Build.SourcesDirectory)/kubernetes-config.yaml'
+    configurationType: 'inline'
+    inline: |
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: web-game
+      spec:
+        replicas: 1
+        selector:
+          matchLabels:
+            app: web-game
+        strategy:
+          rollingUpdate:
+            maxSurge: 1
+            maxUnavailable: 1
+        minReadySeconds: 5 
+        template:
+          metadata:
+            labels:
+              app: web-game
+          spec:
+            nodeSelector:
+              "kubernetes.io/os": linux
+            containers:
+            - name: web-game
+              image: mylabacr13.azurecr.io/web-game:$(versionnumber)
+              ports:
+              - containerPort: 80
+              resources:
+                requests:
+                  cpu: 250m
+                limits:
+                  cpu: 500m
+      ---
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: web-game
+      spec:
+        type: LoadBalancer
+        ports:
+        - port: 80
+        selector:
+          app: web-game
+    arguments: '-f'
     secretType: 'dockerRegistry'
     containerRegistryType: 'Azure Container Registry'
     azureSubscriptionEndpointForSecrets: 'Towards-AzurePortal'
     azureContainerRegistry: 'demoarc123.azurecr.io'
     forceUpdate: false
-    
-    
