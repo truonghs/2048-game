@@ -25,7 +25,7 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      $newVersion = [int]$(originalBranchName.Replace('-', '_')) + 1
+      $newVersion = [int]$env:originalBranchName.Replace('-', '_') + 1
       Write-Host "##vso[task.setvariable variable=versionnumber]$newVersion"
     displayName: 'Set New Version Number'
 
