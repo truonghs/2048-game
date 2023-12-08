@@ -6,7 +6,7 @@ pool:
 
 variables:
 - name: versionnumber
-  value: $(Build.SourceBranchName)-$(Build.BuildId)
+  value: $(Build.SourceBranchName)_$(Build.BuildId)
 
 steps:
 - task: AzureCLI@2
@@ -24,7 +24,7 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      $newVersion = [int]$(Build.SourceBranchName)-$(Build.BuildId) + 1
+      $newVersion = [int]$(Build.SourceBranchName).Replace('-', '_') + 1
       Write-Host "##vso[task.setvariable variable=versionnumber]$newVersion"
     displayName: 'Set New Version Number'
 
