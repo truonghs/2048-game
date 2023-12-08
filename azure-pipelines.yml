@@ -34,12 +34,36 @@ steps:
     kubernetesCluster: 'demokubernete'
     namespace: 'default'
     command: 'apply'
-    useConfigurationFile: true
-    configurationType: 'inline'
-    inline: |
-      cat 01_kubernetes_aks.yaml | sed 's/\$(versionnumber)/$(versionnumber)/' | kubectl apply -f -
+   
     secretType: 'dockerRegistry'
     containerRegistryType: 'Azure Container Registry'
     azureSubscriptionEndpointForSecrets: 'Towards-AzurePortal'
     azureContainerRegistry: 'demoarc123.azurecr.io'
     forceUpdate: false
+    configurationType: 'inline'
+    inline: |
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: web-game
+      spec:
+        replicas: 1
+        selector:
+          matchLabels:
+            app: web-game
+        template:
+          metadata:
+            labels:
+              app: web-game
+          spec:
+            containers:
+              - name: web-game
+                image: demoarc123.azurecr.io/web-game:$(versionnumber)
+                ports:
+                  - containerPort: 80
+                resources:
+                  requests:
+                    cpu: 250m
+                  limits:
+                    cpu: 500m
+                imagePullPolicy: Always
