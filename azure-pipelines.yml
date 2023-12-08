@@ -5,8 +5,8 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-- name: versionnumber
-  value: $(Build.SourceBranchName)_$(Build.BuildId)
+- name: originalBranchName
+  value: $(Build.SourceBranchName)
 
 steps:
 - task: AzureCLI@2
@@ -15,16 +15,17 @@ steps:
     scriptType: 'bash'
     scriptLocation: 'inlineScript'
     inlineScript: |
-      az acr repository delete --name demoarc123 --image web-game:$(versionnumber) --yes
-      docker build -t demoarc123.azurecr.io/web-game:$(versionnumber) 2048-game
+      az acr repository delete --name demoarc123 --image web-game:$(originalBranchName) --yes
+      docker build -t demoarc123.azurecr.io/web-game:$(originalBranchName) 2048-game
       az acr login -n demoarc123
-      docker push demoarc123.azurecr.io/web-game:$(versionnumber)
+      docker push demoarc123.azurecr.io/web-game:$(originalBranchName)
+    displayName: 'Build and Push Docker Image'
 
 - task: PowerShell@2
   inputs:
     targetType: 'inline'
     script: |
-      $newVersion = [int]$(Build.SourceBranchName).Replace('-', '_') + 1
+      $newVersion = [int]$(originalBranchName.Replace('-', '_')) + 1
       Write-Host "##vso[task.setvariable variable=versionnumber]$newVersion"
     displayName: 'Set New Version Number'
 
@@ -89,3 +90,4 @@ steps:
     azureSubscriptionEndpointForSecrets: 'Towards-AzurePortal'
     azureContainerRegistry: 'demoarc123.azurecr.io'
     forceUpdate: true
+    displayName: 'Deploy to Kubernetes'
