@@ -2,8 +2,7 @@ trigger:
 - main
 
 variables:
-- name: originalBranchName
-  value: 'main'
+  originalBranchName: 'main'
 
 pool:
   vmImage: ubuntu-latest
@@ -24,13 +23,8 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      if ($env:originalBranchName) {
-          $newVersion = [int]$env:originalBranchName.Replace('-', '_') + 1
-          Write-Host "##vso[task.setvariable variable=versionnumber]$newVersion"
-      } else {
-          Write-Host "##vso[task.logissue type=error]originalBranchName is not set."
-          exit 1
-      }
+      $newVersion = [int]$env:originalBranchName.Replace('-', '_') + 1
+      Write-Host "##vso[task.setvariable variable=versionnumber]$newVersion"
     displayName: 'Set New Version Number'
 
 - script: echo $(versionnumber)
@@ -82,6 +76,7 @@ steps:
       kind: Service
       metadata:
           name: web-game
+
       spec:
           type: LoadBalancer
           ports:
