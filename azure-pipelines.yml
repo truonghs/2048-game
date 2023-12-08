@@ -42,7 +42,7 @@ steps:
   displayName: 'Check Deployment Existence'
 
 - task: Kubernetes@1
-  condition: eq(variables['deployment_exists'], 'false')
+  condition: eq(variables['deployment_exists'], 'true')
   inputs:
     connectionType: 'Azure Resource Manager'
     azureSubscriptionEndpoint: 'Towards-AzurePortal'
@@ -59,7 +59,7 @@ steps:
     forceUpdate: false
 
 - task: Kubernetes@1
-  condition: eq(variables['deployment_exists'], 'true')
+  condition: eq(variables['deployment_exists'], 'false')
   inputs:
     connectionType: 'Azure Resource Manager'
     azureSubscriptionEndpoint: 'Towards-AzurePortal'
