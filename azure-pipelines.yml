@@ -25,8 +25,13 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      $newVersion = [int]$env:originalBranchName.Replace('-', '_') + 1
-      Write-Host "##vso[task.setvariable variable=versionnumber]$newVersion"
+      if ($env:originalBranchName) {
+          $newVersion = [int]$env:originalBranchName.Replace('-', '_') + 1
+          Write-Host "##vso[task.setvariable variable=versionnumber]$newVersion"
+      } else {
+          Write-Host "##vso[task.logissue type=error]originalBranchName is not set."
+          exit 1
+      }
     displayName: 'Set New Version Number'
 
 - task: Kubernetes@1
