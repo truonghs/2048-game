@@ -12,9 +12,9 @@ steps:
     scriptType: 'bash'
     scriptLocation: 'inlineScript'
     inlineScript: |
-      az acr login -n demoarc123
       az acr repository delete --name demoarc123 --image web-game:latest --yes
       docker build -t demoarc123.azurecr.io/web-game:latest -f 2048-game/Dockerfile
+      az acr login -n demoarc123
       docker push demoarc123.azurecr.io/web-game:latest
 
 - task: Kubernetes@1
