@@ -40,3 +40,4 @@ spec:
   - port: 80
   selector:
     app: web-game
+
