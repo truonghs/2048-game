@@ -79,7 +79,6 @@ steps:
         - port: 80
         selector:
           app: web-game
-    arguments: '-f'
     secretType: 'dockerRegistry'
     containerRegistryType: 'Azure Container Registry'
     azureSubscriptionEndpointForSecrets: 'Towards-AzurePortal'
