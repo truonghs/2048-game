@@ -39,10 +39,17 @@ steps:
     azureContainerRegistry: 'demoarc123.azurecr.io'
     forceUpdate: false
 
-- task: AzureCLI@2
+- task: Kubernetes@1
   inputs:
-    azureSubscription: 'Towards-AzurePortal'
-    scriptType: 'bash'
-    scriptLocation: 'inlineScript'
-    inlineScript: |
-      kubectl set image deployment/web-game web-game=demoarc123.azurecr.io/web-game:4
+    connectionType: 'Azure Resource Manager'
+    azureSubscriptionEndpoint: 'Towards-AzurePortal'
+    azureResourceGroup: 'DemoGroup'
+    kubernetesCluster: 'demokubernete'
+    namespace: 'default'
+    command: 'set'
+    arguments: 'image deployment/web-game *=demoarc123.azurecr.io/web-game:$(versionnumber)'
+    secretType: 'dockerRegistry'
+    containerRegistryType: 'Azure Container Registry'
+    azureSubscriptionEndpointForSecrets: 'Towards-AzurePortal'
+    azureContainerRegistry: 'demoarc123.azurecr.io'
+    forceUpdate: false
