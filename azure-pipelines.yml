@@ -14,8 +14,7 @@ steps:
     inlineScript: |
       az acr login -n demoarc123
       az acr repository delete --name demoarc123 --image web-game:latest --yes
-      docker build -t demoarc123.azurecr.io/web-game:latest 2048-game
-      az acr login -n demoarc123
+      docker build -t demoarc123.azurecr.io/web-game:latest -f 2048-game/Dockerfile
       docker push demoarc123.azurecr.io/web-game:latest
 
 - task: Kubernetes@1
@@ -69,7 +68,7 @@ steps:
               - port: 80
           selector:
               app: web-game
-              
+
     useConfigurationFile: true
     configuration: '01_kubernetes_aks'
     secretType: 'dockerRegistry'
