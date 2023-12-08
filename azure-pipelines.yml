@@ -29,7 +29,7 @@ steps:
     command: 'apply'
     useConfigurationFile: true
     configuration: '01_kubernetes_aks'
-    arguments: 'versionnumber=$(versionnumber)'
+    arguments: 'VERSIONNUMBER=$(versionnumber)'
     secretType: 'dockerRegistry'
     containerRegistryType: 'Azure Container Registry'
     azureSubscriptionEndpointForSecrets: 'Towards-AzurePortal'
