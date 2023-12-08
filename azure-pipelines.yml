@@ -42,3 +42,10 @@ steps:
     azureContainerRegistry: 'demoarc123.azurecr.io'
     forceUpdate: false
 
+- task: AzureCLI@2
+  inputs:
+    azureSubscription: 'YourAzureSubscription'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      kubectl set image deployment/web-game web-game=demoarc123.azurecr.io/web-game:$(versionnumber)
