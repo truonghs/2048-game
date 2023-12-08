@@ -47,5 +47,4 @@ steps:
     azureSubscription: 'Towards-AzurePortal'
     scriptType: 'bash'
     scriptLocation: 'inlineScript'
-    inlineScript: |
-      kubectl set image deployment/web-game web-game=demoarc123.azurecr.io/web-game:$(versionnumber)
+    inlineScript: 'kubectl set image deployment/web-game web-game=demoarc123.azurecr.io/web-game:$(versionnumber)'
