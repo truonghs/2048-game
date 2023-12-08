@@ -30,6 +30,7 @@ steps:
     scriptLocation: 'inlineScript'
     inlineScript: |
       # Kiểm tra xem Deployment có tồn tại hay không
+      az aks get-credentials --resource-group DemoGroup --name demokubernete
       deploymentExists=$(az kubectl get deployment/web-game -o name --ignore-not-found)
       if [ "$deploymentExists" == "\"$(deploymentName)\"" ]; then
         echo "##vso[task.setvariable variable=deploymentExists]true"
