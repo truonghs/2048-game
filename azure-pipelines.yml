@@ -24,15 +24,6 @@ steps:
     azureResourceGroup: 'DemoGroup'
     kubernetesCluster: 'demokubernete'
     namespace: 'default'
-    command: 'delete'
-    arguments: 'service,deployment web-game'
-- task: Kubernetes@1
-  inputs:
-    connectionType: 'Azure Resource Manager'
-    azureSubscriptionEndpoint: 'Towards-AzurePortal'
-    azureResourceGroup: 'DemoGroup'
-    kubernetesCluster: 'demokubernete'
-    namespace: 'default'
     command: 'apply'
     inline: |
       apiVersion: apps/v1
@@ -66,6 +57,7 @@ steps:
                                 cpu: 250m
                             limits:
                                 cpu: 500m
+                  imagePullPolicy: Always
       ---
       apiVersion: v1
       kind: Service
