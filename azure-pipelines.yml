@@ -22,16 +22,6 @@ steps:
 - powershell: |
     (Get-Content "$(System.DefaultWorkingDirectory)/01_kubernetes_aks/app-deploy.yaml") -replace 'REPLACE_VERSIONNUMBER', '$(versionnumber)' | Set-Content "$(System.DefaultWorkingDirectory)/01_kubernetes_aks/app-deploy.yaml"
   displayName: 'Replace Version Number'
-
-- powershell: |
-    $duongDanFileDaChinhSua = "$(System.DefaultWorkingDirectory)/01_kubernetes_aks/app-deploy.yaml"
-    $noiDung = Get-Content $duongDanFileDaChinhSua
-    Write-Host "Nội Dung Đã Chỉnh Sửa:"
-    Write-Host $noiDung
-    # Lưu nội dung vào một biến để sử dụng cho tác vụ Kubernetes
-    $noiDung | Out-File "$(System.DefaultWorkingDirectory)/01_kubernetes_aks/app-deploy.yaml"
-  displayName: 'Truy Cập và Lưu File Đã Chỉnh Sửa'
-
 - task: Kubernetes@1
   inputs:
     connectionType: 'Azure Resource Manager'
@@ -41,7 +31,7 @@ steps:
     namespace: 'default'
     command: 'apply'
     useConfigurationFile: true
-    configuration: '$(System.DefaultWorkingDirectory)/01_kubernetes_aks/app-deploy-configured.yaml'
+    configuration: '$(System.DefaultWorkingDirectory)/01_kubernetes_aks/app-deploy.yaml'
     secretType: 'dockerRegistry'
     containerRegistryType: 'Azure Container Registry'
     azureSubscriptionEndpointForSecrets: 'Towards-AzurePortal'
