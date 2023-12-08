@@ -19,37 +19,17 @@ steps:
       az acr login -n demoarc123
       docker push demoarc123.azurecr.io/web-game:$(versionnumber)
 
-- task: Kubernetes@1
-  inputs:
-    connectionType: 'Azure Resource Manager'
-    azureSubscriptionEndpoint: 'Towards-AzurePortal'
-    azureResourceGroup: 'DemoGroup'
-    kubernetesCluster: 'demokubernete'
-    namespace: 'default'
-    command: 'apply'
-    useConfigurationFile: true
-    configuration: '01_kubernetes_aks'
-    secretType: 'dockerRegistry'
-    containerRegistryType: 'Azure Container Registry'
-    azureSubscriptionEndpointForSecrets: 'Towards-AzurePortal'
-    azureContainerRegistry: 'demoarc123.azurecr.io'
-    forceUpdate: false
+- powershell: |
+    $deploymentExists = kubectl get deployment/web-game -o name --ignore-not-found
+    if ($null -eq $deploymentExists) {
+      Write-Host "Deployment web-game does not exist. Applying configuration..."
+      kubectl apply -n default -f 01_kubernetes_aks.yaml
+    } else {
+      Write-Host "Deployment web-game already exists. Setting image..."
+      kubectl set image deployment/web-game *=demoarc123.azurecr.io/web-game:$(versionnumber) -n default
+    }
+  displayName: 'Check and Apply or Set'
 
 - powershell: |
     Write-Host "Version Number: $(versionnumber)"
   displayName: 'Print Version Number'
-
-- task: Kubernetes@1
-  inputs:
-    connectionType: 'Azure Resource Manager'
-    azureSubscriptionEndpoint: 'Towards-AzurePortal'
-    azureResourceGroup: 'DemoGroup'
-    kubernetesCluster: 'demokubernete'
-    namespace: 'default'
-    command: 'set'
-    arguments: 'image deployment/web-game *=demoarc123.azurecr.io/web-game:$(versionnumber)'
-    secretType: 'dockerRegistry'
-    containerRegistryType: 'Azure Container Registry'
-    azureSubscriptionEndpointForSecrets: 'Towards-AzurePortal'
-    azureContainerRegistry: 'demoarc123.azurecr.io'
-    forceUpdate: false
