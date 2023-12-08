@@ -23,9 +23,6 @@ steps:
     Write-Host "##vso[task.setvariable variable=versionnumber]$($env:versionnumber)"
   displayName: 'Set Version Number'
 
-- script: echo $(versionnumber)
-  displayName: 'Print Version Number'
-
 - task: Kubernetes@1
   inputs:
     connectionType: 'Azure Resource Manager'
@@ -48,5 +45,4 @@ steps:
     scriptType: 'bash'
     scriptLocation: 'inlineScript'
     inlineScript: |
-      az acr login -n demoarc123
-      kubectl set image deployment/web-game web-game=demoarc123.azurecr.io/web-game:$(versionnumber)
+      kubectl set image deployment/web-game web-game=demoarc123.azurecr.io/web-game:4
