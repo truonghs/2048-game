@@ -1,12 +1,12 @@
 trigger:
 - main
 
-pool:
-  vmImage: ubuntu-latest
-
 variables:
 - name: originalBranchName
   value: $(Build.SourceBranchName)
+
+pool:
+  vmImage: ubuntu-latest
 
 steps:
 - task: AzureCLI@2
@@ -15,11 +15,10 @@ steps:
     scriptType: 'bash'
     scriptLocation: 'inlineScript'
     inlineScript: |
-      az acr repository delete --name demoarc123 --image web-game:$(originalBranchName) --yes
-      docker build -t demoarc123.azurecr.io/web-game:$(originalBranchName) 2048-game
+      az acr repository delete --name demoarc123 --image web-game:latest --yes
+      docker build -t demoarc123.azurecr.io/web-game:latest 2048-game
       az acr login -n demoarc123
-      docker push demoarc123.azurecr.io/web-game:$(originalBranchName)
-    displayName: 'Build and Push Docker Image'
+      docker push demoarc123.azurecr.io/web-game:latest
 
 - task: PowerShell@2
   inputs:
@@ -33,6 +32,9 @@ steps:
           exit 1
       }
     displayName: 'Set New Version Number'
+
+- script: echo $(versionnumber)
+  displayName: 'Print Version Number'
 
 - task: Kubernetes@1
   inputs:
@@ -66,7 +68,7 @@ steps:
                       "kubernetes.io/os": linux
                   containers:
                       - name: web-game
-                        image: demoarc123.azurecr.io/web-game:$(versionnumber)
+                        image: demoarc123.azurecr.io/web-game:latest
                         ports:
                             - containerPort: 80
                         resources:
@@ -80,7 +82,6 @@ steps:
       kind: Service
       metadata:
           name: web-game
-
       spec:
           type: LoadBalancer
           ports:
@@ -95,4 +96,3 @@ steps:
     azureSubscriptionEndpointForSecrets: 'Towards-AzurePortal'
     azureContainerRegistry: 'demoarc123.azurecr.io'
     forceUpdate: true
-    displayName: 'Deploy to Kubernetes'
