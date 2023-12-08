@@ -35,6 +35,7 @@ steps:
     namespace: 'default'
     command: 'apply'
     useConfigurationFile: false
+    configurationType: 'inline'
     inline: |
       apiVersion: apps/v1
       kind: Deployment
@@ -73,13 +74,6 @@ steps:
       kind: Service
       metadata:
           name: web-game
-      spec:
-          type: LoadBalancer
-          ports:
-              - port: 80
-          selector:
-              app: web-game
-
     secretType: 'dockerRegistry'
     containerRegistryType: 'Azure Container Registry'
     azureSubscriptionEndpointForSecrets: 'Towards-AzurePortal'
