@@ -40,6 +40,7 @@ steps:
                   maxSurge: 1
                   maxUnavailable: 1
           minReadySeconds: 5
+           
           template:
               metadata:
                   labels:
@@ -57,7 +58,7 @@ steps:
                                 cpu: 250m
                             limits:
                                 cpu: 500m
-              imagePullPolicy: Always
+                  imagePullPolicy: Always
       ---
       apiVersion: v1
       kind: Service
