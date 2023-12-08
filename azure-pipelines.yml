@@ -36,7 +36,8 @@ steps:
       namespace="default"
 
       deployment_exists=$(az aks get-credentials --resource-group DemoGroup --name demokubernete)
-      echo *"kubectl get deployment/$deployment_name"*
+      $deployment_exists = kubectl get deployment/$deployment_name
+      echo $deployment_exists
       if [[ $deployment_exists = *"kubectl get deployment/$deployment_name"* ]]; then
         echo "##vso[task.setvariable variable=deployment_exists]true"
       else
