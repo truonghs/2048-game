@@ -18,8 +18,6 @@ steps:
       az acr login -n demoarc123
       docker push demoarc123.azurecr.io/web-game:latest
 
-- script: cat 01_kubernetes_aks/app-deploy.yaml
-
 - task: Kubernetes@1
   inputs:
     connectionType: 'Azure Resource Manager'
@@ -28,6 +26,50 @@ steps:
     kubernetesCluster: 'demokubernete'
     namespace: 'default'
     command: 'apply'
+    inline: |
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+          name: web-game
+      spec:
+          replicas: 1
+          selector:
+              matchLabels:
+                  app: web-game
+          strategy:
+              rollingUpdate:
+                  maxSurge: 1
+                  maxUnavailable: 1
+          minReadySeconds: 5
+          template:
+              metadata:
+                  labels:
+                      app: web-game
+              spec:
+                  nodeSelector:
+                      "kubernetes.io/os": linux
+                  containers:
+                      - name: web-game
+                        image: demoarc123.azurecr.io/web-game:latest
+                        ports:
+                            - containerPort: 80
+                        resources:
+                            requests:
+                                cpu: 250m
+                            limits:
+                                cpu: 500m
+      ---
+      apiVersion: v1
+      kind: Service
+      metadata:
+          name: web-game
+      spec:
+          type: LoadBalancer
+          ports:
+              - port: 80
+          selector:
+              app: web-game
+              
     useConfigurationFile: true
     configuration: '01_kubernetes_aks'
     secretType: 'dockerRegistry'
