@@ -35,7 +35,9 @@ steps:
     namespace: 'default'
     command: 'apply'
     useConfigurationFile: true
-    configuration: '01_kubernetes_aks'
+    configurationType: 'inline'
+    inline: |
+      cat 01_kubernetes_aks.yaml | sed 's/\$(versionnumber)/$(versionnumber)/' | kubectl apply -f -
     secretType: 'dockerRegistry'
     containerRegistryType: 'Azure Container Registry'
     azureSubscriptionEndpointForSecrets: 'Towards-AzurePortal'
