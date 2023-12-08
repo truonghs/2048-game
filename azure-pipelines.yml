@@ -1,5 +1,3 @@
-
-
 trigger:
 - main
 
@@ -21,32 +19,7 @@ steps:
       az acr login -n demoarc123
       docker push demoarc123.azurecr.io/web-game:$(versionnumber)
 
-- powershell: |
-    Write-Host "Version Number: $(versionnumber)"
-  displayName: 'Print Version Number'
-
-- task: AzureCLI@2
-  inputs:
-    azureSubscription: 'Towards-AzurePortal'
-    scriptType: 'bash'
-    scriptLocation: 'inlineScript'
-    inlineScript: |
-      # Kiểm tra xem Deployment có tồn tại hay không
-      deployment_name="web-game"
-      namespace="default"
-
-      deployment_exists=$(az aks get-credentials --resource-group DemoGroup --name demokubernete)
-      $deployment_exists = kubectl get deployment/$deployment_name
-      echo $deployment_exists
-      if [[ $deployment_exists = *"kubectl get deployment/$deployment_name"* ]]; then
-        echo "##vso[task.setvariable variable=deployment_exists]true"
-      else
-        echo "##vso[task.setvariable variable=deployment_exists]false"
-      fi
-  displayName: 'Check Deployment Existence'
-
 - task: Kubernetes@1
-  condition: eq(variables['deployment_exists'], 'true')
   inputs:
     connectionType: 'Azure Resource Manager'
     azureSubscriptionEndpoint: 'Towards-AzurePortal'
@@ -62,8 +35,11 @@ steps:
     azureContainerRegistry: 'demoarc123.azurecr.io'
     forceUpdate: false
 
+- powershell: |
+    Write-Host "Version Number: $(versionnumber)"
+  displayName: 'Print Version Number'
+
 - task: Kubernetes@1
-  condition: eq(variables['deployment_exists'], 'false')
   inputs:
     connectionType: 'Azure Resource Manager'
     azureSubscriptionEndpoint: 'Towards-AzurePortal'
