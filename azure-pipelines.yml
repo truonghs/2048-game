@@ -7,7 +7,7 @@ pool:
 variables:
   versionnumber: $[counter(variables['Build.SourceBranchName'], 1)]
   deploymentExists:
-  deploymentName="web-game"
+  deploymentName: "web-game"
 
 steps:
 - task: AzureCLI@2
