@@ -35,8 +35,8 @@ steps:
     namespace: 'default'
     command: 'apply'
     
-    useConfigurationFile: true
-    configuration: |
+    useConfigurationFile: false
+    inline: |
       apiVersion: apps/v1
       kind: Deployment
       metadata:
@@ -74,6 +74,7 @@ steps:
       kind: Service
       metadata:
           name: web-game
+
       spec:
           type: LoadBalancer
           ports:
