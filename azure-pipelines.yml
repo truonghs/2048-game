@@ -3,7 +3,7 @@ trigger:
 
 variables:
 - name: originalBranchName
-  value: $(Build.SourceBranchName)
+  value: 'main'
 
 pool:
   vmImage: ubuntu-latest
