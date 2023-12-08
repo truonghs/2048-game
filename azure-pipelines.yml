@@ -27,7 +27,7 @@ steps:
   displayName: 'Print Version Number'
 
 - powershell: |
-    (Get-Content -Path kubernetes-config-template.yaml) -replace '\$\(versionnumber\)', '$(versionnumber)' | Set-Content -Path kubernetes-config.yaml
+    (Get-Content -Path app-deploy.yaml) -replace '\$\(versionnumber\)', '$(versionnumber)' | Set-Content -Path kubernetes-config.yaml
   displayName: 'Replace Version Number in YAML'
 
 - task: Kubernetes@1
