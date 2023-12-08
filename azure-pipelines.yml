@@ -12,8 +12,7 @@ steps:
     scriptType: 'bash'
     scriptLocation: 'inlineScript'
     inlineScript: |
-      echo "##vso[task.prependpath]$(Build.SourcesDirectory)/path/to/cache/key"
-      echo "##vso[task.prependpath]$(Build.SourcesDirectory)/path/to/another/cache/key"
+      az acr login -n demoarc123
       az acr repository delete --name demoarc123 --image web-game:latest --yes
       docker build -t demoarc123.azurecr.io/web-game:latest 2048-game
       az acr login -n demoarc123
