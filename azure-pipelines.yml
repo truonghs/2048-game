@@ -34,12 +34,6 @@ steps:
     kubernetesCluster: 'demokubernete'
     namespace: 'default'
     command: 'apply'
-   
-    secretType: 'dockerRegistry'
-    containerRegistryType: 'Azure Container Registry'
-    azureSubscriptionEndpointForSecrets: 'Towards-AzurePortal'
-    azureContainerRegistry: 'demoarc123.azurecr.io'
-    forceUpdate: false
     configurationType: 'inline'
     inline: |
       apiVersion: apps/v1
@@ -78,3 +72,9 @@ steps:
               - port: 80
           selector:
               app: web-game
+    secretType: 'dockerRegistry'
+    containerRegistryType: 'Azure Container Registry'
+    azureSubscriptionEndpointForSecrets: 'Towards-AzurePortal'
+    azureContainerRegistry: 'demoarc123.azurecr.io'
+    forceUpdate: false
+    
